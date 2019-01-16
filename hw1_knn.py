@@ -10,7 +10,6 @@ from collections import Counter
 ############################################################################
 # DO NOT MODIFY ABOVE CODES
 ############################################################################
-import heapq
 import hw1_utils
 
 class KNN:
@@ -18,9 +17,9 @@ class KNN:
     def __init__(self, k: int, distance_function):
         self.k = k
         self.distance_function = distance_function
-        self.training_examples = {}
 
     def train(self, features: List[List[float]], labels: List[int]):
+        self.training_examples = {}
         for index in range(0,len(features)):
             self.training_examples[tuple(features[index])] = labels[index] 
         
@@ -42,7 +41,6 @@ class KNN:
     def get_k_neighbors(self, point):
         k_nearest = []
         distances_to_features = {} 
-        distances = set()
         for features in self.training_examples.keys():
             features = list(features)
             distance = self.distance_function(point, features)
@@ -50,12 +48,11 @@ class KNN:
             if distance in distances_to_features:
                 feature_list = distances_to_features[distance]
             feature_list.append(features)
-
-            distances.add(distance)
             distances_to_features[distance] = feature_list
 
-        smallest_distances = heapq.nsmallest(self.k, distances)
-        smallest_distances.sort()
+        distances = list(distances_to_features.keys())
+        distances.sort()
+        smallest_distances = distances[0:self.k]
         for distance in smallest_distances:
             feature_list = distances_to_features[distance]
             for feature in feature_list:
@@ -148,11 +145,19 @@ class KNN:
         
     # Do the classification 
     def test_classify(model):
-        training_features = [[2,1], [3,2], [4,3] , [1,2], [2,3]]
-        training_labels = [1,1,1,0,0]
-        model.train(training_features, training_labels)
-        print(str(model.predict([[1,3]])))
+        from data import data_processing
+        from utils import euclidean_distance, gaussian_kernel_distance, inner_product_distance, cosine_sim_distance
+        from utils import f1_score
+        distance_funcs = {
+            'euclidean': euclidean_distance,
+            'gaussian': gaussian_kernel_distance,
+            'inner_prod': inner_product_distance,
+            'cosine_dist': cosine_sim_distance,
+        }
         
+        Xtrain, ytrain, Xval, yval, Xtest, ytest = data_processing()
+        
+
 
         
 
