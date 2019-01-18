@@ -146,17 +146,12 @@ class KNN:
     # Do the classification 
     def test_classify(model):
         from data import data_processing
-        from utils import euclidean_distance, gaussian_kernel_distance, inner_product_distance, cosine_sim_distance
-        from utils import f1_score
-        distance_funcs = {
-            'euclidean': euclidean_distance,
-            'gaussian': gaussian_kernel_distance,
-            'inner_prod': inner_product_distance,
-            'cosine_dist': cosine_sim_distance,
-        }
         
         Xtrain, ytrain, Xval, yval, Xtest, ytest = data_processing()
-        
+        model.train(Xtrain, ytrain)
+        predicted_labels = model.predict(Xtest)
+
+
 
 
         

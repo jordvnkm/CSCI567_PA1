@@ -7,7 +7,31 @@ def Information_Gain(s, branches):
     # S: float - entropy of current state
     # branches: List[List[any]]
     # return: float
-    s
+    total_examples = 0
+    for branch in branches:
+        total_examples += numpy.sum(branch)
+
+    if total_examples == 0:
+        return 0
+
+    remainder = 0
+    for branch in branches:
+        probability = numpy.sum(branch) / total_examples
+        entropy = get_entropy(branch)
+        remainder += probability * entropy
+
+    return s - remainder
+
+def get_entropy(branch):
+    total = numpy.sum(branch)
+    if total == 0:
+        return 0
+    answer = 0
+    for class_count in branch:
+        probability = class_count / total
+        answer += probability * math.log(probability, 2)  
+    return answer * -1
+
 
 
 # implement reduced error pruning
@@ -242,8 +266,5 @@ class MinMaxScaler:
 
 
 if __name__ == "__main__":
-#    predicted_labels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0]
-#    real_labels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1]
-    predicted_labels = [0,0,0,0]
-    real_labels =      [0,1,0,1]
-    print(str(f1_score2(real_labels, predicted_labels)))
+    branches = [[5, 2],[3, 10]]
+    print(str(Information_Gain(0.97, branches)))
